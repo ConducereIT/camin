@@ -118,4 +118,46 @@ export class Send_mailer {
 
     return false;
   }
+
+  async sendNotifyStart(
+    to: string,
+    subject: string,
+    nume: string,
+  ): Promise<boolean> {
+    try {
+      const html = `<!doctype html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Email Title</title>
+</head>
+<body>
+<div style="background-color: #f4f4f4; padding: 20px; font-family: Arial, sans-serif; color: #333; text-align: center;">
+    <h1 style="color: #333;">Salutare, ${nume}!</h1>
+    <p>În 10 minute aveți programare!</p>
+    <p>Comitet Cămin Leu</p>
+    <a href="https://www.camin.lsebucuresti.org" style="text-decoration: none; color: #007bff;">https://www.camin.lsebucuresti.org</a>
+</div>
+</body>
+</html>`;
+
+      const inlinedHtml = juice(html);
+
+      await this.transporter.sendMail({
+        from: process.env.SEND_MAIL_USER,
+        to,
+        subject,
+        html: inlinedHtml,
+      });
+
+      return true;
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+
+    return false;
+  }
 }

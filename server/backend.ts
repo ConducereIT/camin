@@ -362,11 +362,28 @@ export class BackendService {
         },
       });
 
+      const eventsStart = await this.prisma.events.findMany({
+        where: {
+          start_event: {
+            gte: new Date(),
+            lt: new Date(new Date().getTime() + 10 * 60 * 1000),
+          },
+        },
+      });
+
       for (let i = 0; i < events.length; i++) {
         await this.mailer.sendNotifyFinish(
           events[i].email,
           "Programarea ta se termina in 10 minute!",
           events[i].title,
+        );
+      }
+
+      for (let i = 0; i < eventsStart.length; i++) {
+        await this.mailer.sendNotifyStart(
+          eventsStart[i].email,
+          "Programarea ta incepe in 10 minute!",
+          eventsStart[i].title,
         );
       }
     } catch (error) {

@@ -1,0 +1,29 @@
+{
+    "name": "auth-project-backend",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@genezio/types": "^1.0.13",
+        "@prisma/client": "^5.10.2",
+        "juice": "^10.0.0",
+        "moment": "^2.30.1",
+        "node-fetch": "^3.3.2",
+        "nodemailer": "^6.9.11"
+    },
+    "prettier": {
+        "tabWidth": 2
+    },
+    "devDependencies": {
+        "@types/node": "^20.11.24",
+        "@types/nodemailer": "^6.4.14",
+        "@typescript-eslint/eslint-plugin": "^6.14.0",
+        "@typescript-eslint/parser": "^6.14.0",
+        "eslint": "^8.55.0",
+        "prisma": "^5.10.2"
+    }
+}

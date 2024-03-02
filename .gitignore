@@ -1,0 +1,4 @@
+node_modules
+.idea
+./client/.idea
+./server/.idea

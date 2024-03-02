@@ -150,6 +150,71 @@ export class BackendService {
   }
 
   @GenezioAuth()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getAllEvents(context: GnzContext): Promise<
+    {
+      end: string;
+      start: string;
+      title: string;
+    }[]
+  > {
+    try {
+      // Find all events in the database
+      const events = await this.prisma.events.findMany();
+
+      // Convert the events to the desired format for the calendar
+      return events.map((event) => {
+        const eventStart = new Date(event.start_event).toISOString();
+        const eventEnd = new Date(event.end_event).toISOString();
+        const title = event.title + "  " + event.phone + " - " + event.camera;
+        return {
+          id: event.id,
+          title: title,
+          start: eventStart,
+          end: eventEnd,
+        };
+      });
+    } catch (error) {
+      console.error("Eroare internă. Te rog reîncearcă mai târziu!", error);
+      return [];
+    }
+  }
+
+  @GenezioAuth()
+  async deleteEvent(
+    context: GnzContext,
+    eventId: number,
+  ): Promise<DeletePersonResponse> {
+    try {
+      // Find the event to deleted
+      const findEventToDeleted = await this.prisma.events.findFirst({
+        where: { id: eventId },
+      });
+      // If the event exits, delete it
+      if (findEventToDeleted) {
+        const deletedUser = await this.prisma.events.deleteMany({
+          where: { id: eventId },
+        });
+        if (deletedUser) return { status: true, message: "Event sters" };
+        else {
+          return { status: false, message: "Event negasit" };
+        }
+      } else {
+        return {
+          status: false,
+          message: "Eroare nu poti sterge evenimentul altcuiva!",
+        };
+      }
+    } catch (error) {
+      console.error(error);
+      return {
+        status: false,
+        message: "Eroare. Te rog reincearca mai tarziu!",
+      };
+    }
+  }
+
+  @GenezioAuth()
   async getPhoneAndCamera(context: GnzContext): Promise<{
     phone: string;
     camera: string;

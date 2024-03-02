@@ -9,6 +9,7 @@ import { AuthService } from "@genezio/auth";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import Account from "./routes/account.tsx";
+import Admin from "./routes/admin.tsx";
 
 AuthService.getInstance().setTokenAndRegion(
   "0-pmfinp3ogv4ufxg7zlbvzfmjje0peohf",
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/account",
     element: <Account />,
+  },
+  {
+    path: "/admin",
+    element: <Admin />,
   },
 ]);
 

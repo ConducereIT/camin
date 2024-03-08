@@ -190,8 +190,11 @@ export class BackendService {
       const findEventToDeleted = await this.prisma.events.findFirst({
         where: { id: eventId },
       });
+
+
       // If the event exits, delete it
       if (findEventToDeleted) {
+
         const deletedUser = await this.prisma.events.deleteMany({
           where: { id: eventId },
         });
@@ -261,6 +264,12 @@ export class BackendService {
     camera: string,
   ): Promise<AddPersonResponse> {
     try {
+      if (new Date(startDate) < new Date()) {
+        return {
+          status: false,
+          message: "Nu poti adauga evenimente in trecut!",
+        };
+      }
       // Check if an event with the provided title (email) already exists
       const existingEvent = await this.prisma.events.findMany({
         where: { title: context.user?.name },
@@ -388,6 +397,13 @@ export class BackendService {
       });
       // If the event exits, delete it
       if (findEventToDeleted) {
+        if (findEventToDeleted.start_event < new Date()) {
+          return {
+            status: false,
+            message: "Nu poti sterge evenimente in trecut!",
+          };
+        }
+
         const deletedUser = await this.prisma.events.deleteMany({
           where: {
             title: context.user?.name,

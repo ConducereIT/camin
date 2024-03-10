@@ -5,8 +5,8 @@ import {
   GnzContext,
 } from "@genezio/types";
 import moment from "moment";
-import { PrismaClient } from "@prisma/client";
-import { Send_mailer } from "./send-mail";
+import {PrismaClient} from "@prisma/client";
+import {Send_mailer} from "./send-mail";
 
 export type AddPersonResponse = {
   status: boolean;
@@ -57,7 +57,7 @@ export class BackendService {
   }> {
     try {
       const infoUser = await this.prisma.infoUser.findUnique({
-        where: { userId: context.user!.userId },
+        where: {userId: context.user!.userId},
       });
 
       if (!infoUser) {
@@ -83,7 +83,7 @@ export class BackendService {
   async checkHasPhoneAndCamera(context: GnzContext): Promise<boolean> {
     try {
       const infoUser = await this.prisma.infoUser.findUnique({
-        where: { userId: context.user!.userId },
+        where: {userId: context.user!.userId},
       });
 
       return !(infoUser?.phone === undefined || infoUser?.camera === undefined);
@@ -101,7 +101,7 @@ export class BackendService {
   ): Promise<string> {
     try {
       await this.prisma.infoUser.update({
-        where: { userId: context.user!.userId },
+        where: {userId: context.user!.userId},
         data: {
           phone: phone,
           camera: camera,
@@ -129,7 +129,7 @@ export class BackendService {
     try {
       // Find all events in the database
       const events = await this.prisma.events.findMany({
-        where: { calendar_n: numberCalendar },
+        where: {calendar_n: numberCalendar},
       });
 
       // Convert the events to the desired format for the calendar
@@ -156,6 +156,7 @@ export class BackendService {
       end: string;
       start: string;
       title: string;
+      number: string;
     }[]
   > {
     try {
@@ -167,11 +168,13 @@ export class BackendService {
         const eventStart = new Date(event.start_event).toISOString();
         const eventEnd = new Date(event.end_event).toISOString();
         const title = event.title + "  " + event.phone + " - " + event.camera;
+        const number = event.calendar_n;
         return {
           id: event.id,
           title: title,
           start: eventStart,
           end: eventEnd,
+          number: number,
         };
       });
     } catch (error) {
@@ -188,7 +191,7 @@ export class BackendService {
     try {
       // Find the event to deleted
       const findEventToDeleted = await this.prisma.events.findFirst({
-        where: { id: eventId },
+        where: {id: eventId},
       });
 
 
@@ -196,11 +199,11 @@ export class BackendService {
       if (findEventToDeleted) {
 
         const deletedUser = await this.prisma.events.deleteMany({
-          where: { id: eventId },
+          where: {id: eventId},
         });
-        if (deletedUser) return { status: true, message: "Event sters" };
+        if (deletedUser) return {status: true, message: "Event sters"};
         else {
-          return { status: false, message: "Event negasit" };
+          return {status: false, message: "Event negasit"};
         }
       } else {
         return {
@@ -231,7 +234,7 @@ export class BackendService {
       }
 
       const infoUser = await this.prisma.infoUser.findUnique({
-        where: { userId: context.user?.userId },
+        where: {userId: context.user?.userId},
       });
 
       if (!infoUser) {
@@ -264,7 +267,7 @@ export class BackendService {
     camera: string,
   ): Promise<AddPersonResponse> {
     try {
-      if (new Date(startDate) < new Date()) {
+      if (new Date(startDate).getTime() < new Date().getTime()) {
         return {
           status: false,
           message: "Nu poti adauga evenimente in trecut!",
@@ -272,7 +275,7 @@ export class BackendService {
       }
       // Check if an event with the provided title (email) already exists
       const existingEvent = await this.prisma.events.findMany({
-        where: { title: context.user?.name },
+        where: {title: context.user?.name},
       });
 
       const getAllEvents = await this.prisma.events.findMany();
@@ -287,25 +290,41 @@ export class BackendService {
       }
 
       for (let i = 0; i < getAllEvents.length; i++) {
+        if(getAllEvents[i].calendar_n === number) {
+          if(new Date(startDate).getTime() === new Date(getAllEvents[i].start_event).getTime()) {
+            return {
+              status: false,
+              message: "Evenimentul se intersecteaza cu un eveniment existent!",
+            };
+          }
+          if(new Date(endDate).getTime() === new Date(getAllEvents[i].end_event).getTime()) {
+            return {
+              status: false,
+              message: "Evenimentul se intersecteaza cu un eveniment existent!",
+            };
+          }
+        }
+
         if (
           (getAllEvents[i].calendar_n === number &&
-            new Date(startDate) > new Date(getAllEvents[i].start_event) &&
-            new Date(startDate) < new Date(getAllEvents[i].end_event)) ||
+            new Date(startDate).getTime() > new Date(getAllEvents[i].start_event).getTime() &&
+            new Date(startDate).getTime() < new Date(getAllEvents[i].end_event).getTime()) ||
           (getAllEvents[i].calendar_n === number &&
-            new Date(endDate) > new Date(getAllEvents[i].start_event) &&
-            new Date(endDate) < new Date(getAllEvents[i].end_event)) ||
+            new Date(endDate).getTime() > new Date(getAllEvents[i].start_event).getTime() &&
+            new Date(endDate).getTime() < new Date(getAllEvents[i].end_event).getTime()) ||
           (getAllEvents[i].calendar_n === number &&
-            new Date(startDate) < new Date(getAllEvents[i].start_event) &&
-            new Date(endDate) > new Date(getAllEvents[i].end_event)) ||
-          (getAllEvents[i].calendar_n === number &&
-            new Date(startDate) === new Date(getAllEvents[i].start_event) &&
-            new Date(endDate) === new Date(getAllEvents[i].end_event))
+            new Date(startDate).getTime() < new Date(getAllEvents[i].start_event).getTime() &&
+            new Date(endDate).getTime() > new Date(getAllEvents[i].end_event).getTime()) ||
+          (getAllEvents[i].calendar_n === number && (
+            new Date(startDate).getTime() === new Date(getAllEvents[i].start_event).getTime() ||
+            new Date(endDate).getTime() === new Date(getAllEvents[i].end_event).getTime()))
         ) {
           return {
             status: false,
             message: "Evenimentul se intersecteaza cu un eveniment existent!",
           };
         }
+        console.log("DEBUG: existing event: ", getAllEvents[i].start_event, getAllEvents[i].end_event, getAllEvents[i].calendar_n, getAllEvents[i].title);
       }
 
       //count the number of events at the same week in existingEvent
@@ -370,7 +389,7 @@ export class BackendService {
         masina,
       );
 
-      return { status: true, message: "S-a adaugat!" };
+      return {status: true, message: "S-a adaugat!"};
     } catch (error) {
       console.error("Eroare de conectare la baza de date", error);
       return {
@@ -411,9 +430,9 @@ export class BackendService {
             end_event: endDate,
           },
         });
-        if (deletedUser) return { status: true, message: "Event sters" };
+        if (deletedUser) return {status: true, message: "Event sters"};
         else {
-          return { status: false, message: "Event negasit" };
+          return {status: false, message: "Event negasit"};
         }
       } else {
         return {
@@ -430,7 +449,7 @@ export class BackendService {
     }
   }
 
-  @GenezioMethod({ type: "cron", cronString: "20,50 * * * *" })
+  @GenezioMethod({type: "cron", cronString: "20,50 * * * *"})
   async cronJob() {
     console.log("Cron job running at " + new Date().toISOString());
     try {
@@ -469,6 +488,18 @@ export class BackendService {
       }
     } catch (error) {
       console.error("Eroare internă. Te rog reîncearcă mai târziu!", error);
+    }
+  }
+
+  @GenezioAuth()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getNumberUsers(context: GnzContext): Promise<number> {
+    try {
+      const users = await this.prisma.infoUser.findMany();
+      return users.length;
+    } catch (error) {
+      console.error("Eroare internă. Te rog reîncearcă mai târziu!", error);
+      return 0;
     }
   }
 }

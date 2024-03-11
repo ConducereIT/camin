@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {AuthService} from "@genezio/auth";
 import {useNavigate} from "react-router-dom";
 import {BackendService} from "@genezio-sdk/camin_eu-central-1";
+import {formatDate} from "@fullcalendar/core";
 
 const Admin: React.FC = () => {
   const [eventsDate, setEventsDate] = useState<{ [key: string]: any }>({});
@@ -104,8 +105,22 @@ const Admin: React.FC = () => {
             .map((event: any) => (
               <tr key={event.id}>
                 <th scope="row">{event.id}</th>
-                <td>{event.start}</td>
-                <td>{event.end}</td>
+                <td>{formatDate(event.start, {
+                  day: "numeric",
+                  month: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  hour12: false,
+                })}</td>
+                <td>{formatDate(event.end, {
+                  day: "numeric",
+                  month: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  hour12: false,
+                })}</td>
                 <td>{event.title}</td>
                 <td>{event.number == "first" ? "1" : event.number == "second" ? "2" : event.number == "third" ? "3" : event.number == "four" ? "4" : "invalid"}</td>
                 <td>

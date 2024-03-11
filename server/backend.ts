@@ -273,6 +273,14 @@ export class BackendService {
           message: "Nu poti adauga evenimente in trecut!",
         };
       }
+
+      if (new Date(endDate).getTime() - new Date(startDate).getTime() > 8 * 60 * 60 * 1000) {
+        return {
+          status: false,
+          message: "Nu poti adauga un eveniment mai mare de 8 ore!",
+        };
+      }
+
       // Check if an event with the provided title (email) already exists
       const existingEvent = await this.prisma.events.findMany({
         where: {title: context.user?.name},
@@ -324,7 +332,6 @@ export class BackendService {
             message: "Evenimentul se intersecteaza cu un eveniment existent!",
           };
         }
-        console.log("DEBUG: existing event: ", getAllEvents[i].start_event, getAllEvents[i].end_event, getAllEvents[i].calendar_n, getAllEvents[i].title);
       }
 
       //count the number of events at the same week in existingEvent
@@ -340,11 +347,11 @@ export class BackendService {
         }
       }
 
-      if (count >= 7) {
+      if (count >= 10) {
         return {
           status: false,
           message:
-            "Ai adaugat deja numarul maxim de evenimente (7) in aceeasta saptamana!",
+            "Ai adaugat deja numarul maxim de evenimente (10) in aceeasta saptamana!",
         };
       }
 

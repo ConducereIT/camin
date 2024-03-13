@@ -298,14 +298,14 @@ export class BackendService {
       }
 
       for (let i = 0; i < getAllEvents.length; i++) {
-        if(getAllEvents[i].calendar_n === number) {
-          if(new Date(startDate).getTime() === new Date(getAllEvents[i].start_event).getTime()) {
+        if (getAllEvents[i].calendar_n === number) {
+          if (new Date(startDate).getTime() === new Date(getAllEvents[i].start_event).getTime()) {
             return {
               status: false,
               message: "Evenimentul se intersecteaza cu un eveniment existent!",
             };
           }
-          if(new Date(endDate).getTime() === new Date(getAllEvents[i].end_event).getTime()) {
+          if (new Date(endDate).getTime() === new Date(getAllEvents[i].end_event).getTime()) {
             return {
               status: false,
               message: "Evenimentul se intersecteaza cu un eveniment existent!",

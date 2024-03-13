@@ -10,6 +10,7 @@ import { AuthService } from "@genezio/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Account from "./routes/account.tsx";
 import Admin from "./routes/admin.tsx";
+// import Mentenanta from "./routes/mentenanta.tsx";
 
 AuthService.getInstance().setTokenAndRegion(
   "0-pmfinp3ogv4ufxg7zlbvzfmjje0peohf",

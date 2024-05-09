@@ -3,7 +3,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { BackendService } from "@genezio-sdk/camin_eu-central-1";
+import { BackendService } from "@genezio-sdk/camin-runtime";
 
 interface RenderCalendarProps {
   dayCalendar: string;

@@ -10,10 +10,11 @@ import { AuthService } from "@genezio/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Account from "./routes/account.tsx";
 import Admin from "./routes/admin.tsx";
+import MyAppointments from "./routes/myAppointments.tsx";
 // import Mentenanta from "./routes/mentenanta.tsx";
 
 AuthService.getInstance().setTokenAndRegion(
-  "0-pmfinp3ogv4ufxg7zlbvzfmjje0peohf",
+  "1-17eeba24-d5ce-49ed-94b8-50c5eca74738",
   "eu-central-1",
 );
 
@@ -21,19 +22,28 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Calendar />,
+    // element: <Mentenanta />,
   },
   {
     path: "/login",
     element: <Login />,
+    // element: <Mentenanta />,
   },
   {
     path: "/account",
+    // element: <Mentenanta />,
     element: <Account />,
   },
   {
     path: "/admin",
+    // element: <Mentenanta />,
     element: <Admin />,
   },
+  {
+    path: "/myappointments",
+    // element: <Mentenanta />,
+    element: <MyAppointments />,
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

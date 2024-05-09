@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Col, Container, Nav, Row, Tab } from "react-bootstrap";
 import CalendarComponent from "../components/calendar.component.tsx";
 import CalendarMobileComponent from "../components/calendar.mobile.component.tsx";
-import { BackendService } from "@genezio-sdk/camin_eu-central-1";
+import { BackendService } from "@genezio-sdk/camin-runtime";
 import { AuthService } from "@genezio/auth";
 import { useNavigate } from "react-router-dom";
 import "./styles.css";

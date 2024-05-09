@@ -3,7 +3,7 @@ import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { AuthService } from "@genezio/auth";
 import "./styles.css";
 import { useNavigate } from "react-router-dom";
-import { BackendService } from "@genezio-sdk/camin_eu-central-1";
+import { BackendService } from "@genezio-sdk/camin-runtime";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();

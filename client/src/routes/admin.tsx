@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {AuthService} from "@genezio/auth";
 import {useNavigate} from "react-router-dom";
-import {BackendService} from "@genezio-sdk/camin_eu-central-1";
+import {BackendService} from "@genezio-sdk/camin-runtime";
 import {formatDate} from "@fullcalendar/core";
 
 const Admin: React.FC = () => {

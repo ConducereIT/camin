@@ -1,14 +1,20 @@
-name: camin
+name: camin-runtime
 region: eu-central-1
-language: ts
-cloudProvider: genezio
-scripts:
-  preBackendDeploy: npm install
-  preFrontendDeploy: npm run install-prod-sdk && npm install && npm run build
+yamlVersion: 2
+backend:
+  path: server
+  language:
+    name: ts
+    packageManager: npm
+  scripts:
+    deploy: npm install
+  cloudProvider: capybaraLinux
 frontend:
-  path: client/dist
-  subdomain: fuchsia-awkward-baboon
-packageManager: npm
-workspace:
-  backend: server
-  frontend: client
+  path: client
+  publish: dist
+  scripts:
+    deploy:
+      - npm install
+      - npm install @genezio-sdk/camin-runtime
+      - npm run build
+  subdomain: aquamarine-minimal-crocodile

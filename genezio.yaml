@@ -15,6 +15,7 @@ frontend:
   scripts:
     deploy:
       - npm install
+      - npm i @genezio/auth@latest
       - npm install @genezio-sdk/camin-runtime
       - npm run build
   subdomain: aquamarine-minimal-crocodile

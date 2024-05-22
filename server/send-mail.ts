@@ -26,6 +26,7 @@ export class Send_mailer {
     numarMasina: string,
   ): Promise<boolean> {
     try {
+      console.log("Sending to:", to);
       const linkGoogleCalendar = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
         subject,
       )}&dates=${encodeURIComponent(start.replace(/[:\+-]/g, ""))}/${encodeURIComponent(
@@ -83,6 +84,7 @@ export class Send_mailer {
     nume: string,
   ): Promise<boolean> {
     try {
+      console.log("Sending to:", to);
       const html = `<!doctype html>
 <html lang="ro">
 <head>
@@ -125,6 +127,7 @@ export class Send_mailer {
     nume: string,
   ): Promise<boolean> {
     try {
+      console.log("Sending to:", to);
       const html = `<!doctype html>
 <html lang="ro">
 <head>

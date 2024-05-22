@@ -1,5 +1,5 @@
 name: camin-runtime
-region: eu-central-1
+region: us-east-1
 yamlVersion: 2
 backend:
   path: server

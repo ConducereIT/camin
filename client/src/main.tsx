@@ -14,8 +14,8 @@ import MyAppointments from "./routes/myAppointments.tsx";
 // import Mentenanta from "./routes/mentenanta.tsx";
 
 AuthService.getInstance().setTokenAndRegion(
-  "1-d66afa1a-0887-4014-96f8-42b5239e767f",
-  "us-east-1",
+  "1-4395fb1a-c50f-437c-bc6a-9d2451e18675",
+  "eu-central-1",
 );
 
 const router = createBrowserRouter([

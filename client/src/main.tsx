@@ -14,7 +14,7 @@ import MyAppointments from "./routes/myAppointments.tsx";
 // import Mentenanta from "./routes/mentenanta.tsx";
 
 AuthService.getInstance().setTokenAndRegion(
-  "1-4395fb1a-c50f-437c-bc6a-9d2451e18675",
+  "0-bxx7kwvdg2nszdm3cqhdk7xgsu0oumje",
   "eu-central-1",
 );
 

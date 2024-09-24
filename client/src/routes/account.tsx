@@ -93,7 +93,7 @@ const Account: React.FC = () => {
       <div style={{ position: "absolute", top: 0, width: "100%" }}>
         <NavbarComponent />
         <div className="container mt-5">
-          <h1>Account Settings - {user?.name}</h1>
+          <h1 style={{ color: "#FFA200" }}>Account Settings - {user?.name}</h1>
           <form onSubmit={handleSubmit} className="mt-2">
             {error && (
               <p

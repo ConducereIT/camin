@@ -56,7 +56,7 @@ const Calendars: React.FC = () => {
     const isLoggedIn = async () => {
       try {
         await AuthService.getInstance().userInfoForToken(
-          localStorage.getItem("token") as string,
+          localStorage.getItem("token") as string
         );
         await initializeDefaultTab();
       } catch (error) {

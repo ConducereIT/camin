@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { PreloaderContext } from "./PreloaderProvider.component";
 import LogoWhite from "../assets/icon_logoLSEblue.webp";
+
 const Preloader: React.FC = () => {
   const context = useContext(PreloaderContext);
 
@@ -16,12 +17,28 @@ const Preloader: React.FC = () => {
   }
 
   return (
-    <>
-      <div className="fixed inset-0 flex items-center justify-center z-50 bg-white duration-300">
-        <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-blue-600"></div>
-        <img src={LogoWhite} className="rounded-full h-28 w-28" />
+    <div
+      className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-white"
+      style={{ zIndex: 1050 }}
+    >
+      <div className="position-relative d-flex align-items-center justify-content-center">
+        {/* Spinner container */}
+        <div
+          className="spinner-border text-primary"
+          style={{ width: "6rem", height: "6rem" }}
+          role="status"
+        >
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        {/* Logo inside the spinner */}
+        <img
+          src={LogoWhite}
+          alt="Logo"
+          className="rounded-circle position-absolute"
+          style={{ width: "5rem", height: "5rem" }}
+        />
       </div>
-    </>
+    </div>
   );
 };
 

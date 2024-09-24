@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -16,7 +16,8 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
   eventsDate,
 }) => {
   const [notification, setNotification] = useState<string | null>(null);
-  const [hoveredEvent, setHoveredEvent] = useState<any | null>(null); // Stare pentru evenimentul peste care mouse-ul a intrat
+  const [hoveredEvent, setHoveredEvent] = useState<any | null>(null);
+  const calendarRef = useRef<any>(null); // Create a ref for the calendar
 
   const showNotification = (message: string) => {
     setNotification(message);
@@ -36,7 +37,7 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
         endDate,
         dayCalendar,
         getUserInfo.phone,
-        getUserInfo.camera,
+        getUserInfo.camera
       );
 
       if (status.status) {
@@ -55,7 +56,7 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
       const endDate = event.event.endStr;
       const deleteEvents = await BackendService.deletePerson(
         startDate,
-        endDate,
+        endDate
       );
 
       if (deleteEvents.status) {
@@ -76,7 +77,7 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
   }
 
   return (
-    <div className="calendar">
+    <div className="calendar" ref={calendarRef}>
       {notification && (
         <div className="notification alert alert-info mb-5">{notification}</div>
       )}
@@ -84,8 +85,14 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
         <div
           className="hovered-event-popup bg-light border p-3 position-absolute z-3"
           style={{
-            top: hoveredEvent.jsEvent.clientY + 10,
-            left: hoveredEvent.jsEvent.clientX + 10,
+            top:
+              hoveredEvent.jsEvent.clientY +
+              140 -
+              calendarRef.current.getBoundingClientRect().top,
+            left:
+              hoveredEvent.jsEvent.clientX +
+              60 -
+              calendarRef.current.getBoundingClientRect().left,
           }}
         >
           <p className="mb-1">{hoveredEvent.event.title}</p>
@@ -115,10 +122,10 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
         events={eventsForDay}
         eventClick={handleEventClick}
         eventMouseEnter={(arg) => {
-          setHoveredEvent(arg); // Actualizează starea atunci când mouse-ul intră peste un eveniment
+          setHoveredEvent(arg);
         }}
         eventMouseLeave={() => {
-          setHoveredEvent(null); // Resetarea stării când mouse-ul părăsește evenimentul
+          setHoveredEvent(null);
         }}
       />
     </div>

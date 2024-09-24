@@ -11,12 +11,64 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #FFAE1F;
   text-decoration: inherit;
 }
-a:hover {
-  color: #535bf2;
+
+a.btn.btn-outline-light{
+  font-size: larger;
+  font-weight: 500;
 }
+
+
+a.fc-col-header-cell-cushion{
+  color: #e08e00;
+}
+
+a.fc-col-header-cell-cushion:hover {
+  color: #777777;
+  
+}
+
+#projects-tabs-tab-first.nav-link{
+  color: #000000;
+  font-weight: 500;
+}
+
+#projects-tabs-tab-first.nav-link.active{
+  background-color: #FFAE1F;
+  color: #ffffff;
+}
+#projects-tabs-tab-second.nav-link {
+  color: #000000;
+  font-weight: 500;
+}
+
+#projects-tabs-tab-second.nav-link.active {
+  background-color: #FFAE1F;
+  color: #ffffff;
+}
+#projects-tabs-tab-third.nav-link {
+  color: #000000;
+  font-weight: 500;
+}
+
+#projects-tabs-tab-third.nav-link.active {
+  background-color: #FFAE1F;
+  color: #ffffff;
+}
+
+#projects-tabs-tab-four.nav-link {
+  color: #000000;
+  font-weight: 500;
+}
+
+#projects-tabs-tab-four.nav-link.active {
+  background-color: #FFAE1F;
+  color: #ffffff;
+}
+
+
 
 body {
   margin: 0;
@@ -24,6 +76,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #fff3d1 !important;
 }
 
 h1 {
@@ -31,6 +84,19 @@ h1 {
   line-height: 1.1;
 }
 
+div.fc-event-title-container{
+    background-color: #FFAE1F;
+    border-color: #FFAE1F;
+}
+div.fc-event-time {
+  background-color: #fca309;
+}
+div.fc-event-maine {
+border-color: #FFAE1F;}
+a.fc-event{
+  border-color: #FFAE1F;
+  background-color: #fca309;
+}
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -38,29 +104,19 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #FFAE1F !important;
+  color: black !important;
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
 
 ::-webkit-scrollbar {

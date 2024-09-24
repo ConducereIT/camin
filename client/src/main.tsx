@@ -11,11 +11,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Account from "./routes/account.tsx";
 import Admin from "./routes/admin.tsx";
 import MyAppointments from "./routes/myAppointments.tsx";
+import { PreloaderProvider } from "./components/PreloaderProvider.component.tsx";
+import Preloader from "./components/Preloader.component.tsx";
 // import Mentenanta from "./routes/mentenanta.tsx";
 
 AuthService.getInstance().setTokenAndRegion(
   "0-bxx7kwvdg2nszdm3cqhdk7xgsu0oumje",
-  "eu-central-1",
+  "eu-central-1"
 );
 
 const router = createBrowserRouter([
@@ -43,13 +45,16 @@ const router = createBrowserRouter([
     path: "/myappointments",
     // element: <Mentenanta />,
     element: <MyAppointments />,
-  }
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId="1062295332779-684ijgeeas6721n2ekoe71nkcpcqcu7s.apps.googleusercontent.com">
-      <RouterProvider router={router} />
-    </GoogleOAuthProvider>
-  </React.StrictMode>,
+    <PreloaderProvider>
+      <Preloader />
+      <GoogleOAuthProvider clientId="1062295332779-684ijgeeas6721n2ekoe71nkcpcqcu7s.apps.googleusercontent.com">
+        <RouterProvider router={router} />
+      </GoogleOAuthProvider>
+    </PreloaderProvider>
+  </React.StrictMode>
 );

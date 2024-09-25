@@ -13,9 +13,9 @@ interface RenderCalendarProps {
 }
 
 const RenderCalendar: React.FC<RenderCalendarProps> = ({
-  dayCalendar,
-  eventsDate,
-}) => {
+                                                         dayCalendar,
+                                                         eventsDate,
+                                                       }) => {
   const [notification, setNotification] = useState<string | null>(null);
   const [hoveredEvent, setHoveredEvent] = useState<any | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -83,7 +83,7 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
 
   const eventsForDay = eventsDate && eventsDate[dayCalendar];
 
-  if (!eventsForDay) {
+  if (!eventsForDay || eventsForDay.length === 0) {
     return null;
   }
 

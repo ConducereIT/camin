@@ -135,6 +135,7 @@ const Login: React.FC = () => {
           <button
             type="submit"
             className="btn btn-secondary w-100"
+            style={{background:"#FFAE1F"}}
           >
             {loginLoading ? "Loading..." : "Autentificare"}
           </button>

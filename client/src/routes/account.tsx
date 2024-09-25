@@ -12,6 +12,7 @@ const Account: React.FC = () => {
   const [user, setUser] = useState<any>(undefined);
   const [editMode, setEditMode] = useState<boolean>(false);
   const navigate = useNavigate();
+
   const fetchUserDetails = async () => {
     try {
       const response = await BackendService.getPhoneAndCamera();
@@ -26,7 +27,6 @@ const Account: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Verifică doar la trimitere dacă câmpurile sunt goale
     if (!phoneNumber.trim() || !cameraModel.trim()) {
       setError("Completați toate câmpurile");
       return;
@@ -38,7 +38,6 @@ const Account: React.FC = () => {
       return;
     }
 
-    // check cameraModel max length 5 : Upperletter and 3 or 4 numbers
     const cameraModelRegex = new RegExp("^[A-Z]{1}[0-9]{3,4}$");
     if (!cameraModelRegex.test(cameraModel)) {
       setError("Modelul camerei nu este valid (ex: A1234, A123, C1234, C123)");
@@ -101,49 +100,49 @@ const Account: React.FC = () => {
     };
     isLoggedIn();
   }, []);
+
   return (
     <>
       <div style={{ position: "absolute", top: 0, width: "100%" }}>
         <NavbarComponent />
         <div className="container mt-5">
-          <h1 style={{ color: "#FFA200" }}>Account Settings - {user?.name}</h1>
-          <form onSubmit={handleSubmit} className="mt-2">
-            {error && (
-              <p
-                className="text-danger alert alert-danger mt-4 "
-                style={{ marginBottom: "-2rem;" }}
-              >
-                {error}
-              </p>
-            )}
-            <div className="mb-3">
-              <label htmlFor="phone" className="form-label mt-2">
-                Phone Number
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="phone"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="camera" className="form-label">
-                Camera Model
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="camera"
-                value={cameraModel}
-                onChange={(e) => setCameraModel(e.target.value)}
-              />
-            </div>
-            <button type="submit" className="btn btn-primary">
-              {loading ? "Loading..." : editMode ? "Update" : "Submit"}
-            </button>
-          </form>
+          <div className="bg-white p-4 rounded shadow">
+            <h1 style={{ color: "#212529" }}>Account Settings - {user?.name}</h1>
+            <form onSubmit={handleSubmit} className="mt-2">
+              {error && (
+                <p className="text-danger alert alert-danger mt-4" style={{ marginBottom: "-2rem;" }}>
+                  {error}
+                </p>
+              )}
+              <div className="mb-3">
+                <label htmlFor="phone" className="form-label mt-2">
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="phone"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="camera" className="form-label">
+                  Camera Model
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="camera"
+                  value={cameraModel}
+                  onChange={(e) => setCameraModel(e.target.value)}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary bg-hover-primary" style={{border:"1px solid black"}}>
+                {loading ? "Loading..." : editMode ? "Update" : "Submit"}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </>

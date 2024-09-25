@@ -35,7 +35,7 @@ const Preloader: React.FC = () => {
           src={LogoWhite}
           alt="Logo"
           className="rounded-circle position-absolute bg-warning"
-          style={{ width: "5rem", height: "5rem" }}
+          style={{ width: "5rem", height: "5rem", border:"1px solid #fff" }}
         />
       </div>
     </div>

@@ -9,7 +9,7 @@ export const NavbarComponent = () => {
             src={LogoWhite}
             alt="Logo"
             className="rounded-circle -m-1"
-            style={{ width: "4rem", height: "4rem", borderColor: "#000000" }}
+            style={{ width: "4rem", height: "4rem", border: "1px solid #fff" }}
           />
         </a>
 

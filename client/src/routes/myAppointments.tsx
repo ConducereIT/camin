@@ -21,7 +21,7 @@ const MyAppointments: React.FC = () => {
       }
     };
     isLoggedIn();
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -54,7 +54,7 @@ const MyAppointments: React.FC = () => {
   return (
     <div style={{ position: "absolute", top: 0, width: "100%" }}>
       <NavbarComponent />
-      <div className="container mt-xl-5">
+      <div className="container pt-5">
         <div className="d-flex justify-content-between">
           <h1>Programările mele</h1>
         </div>

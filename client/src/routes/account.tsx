@@ -88,6 +88,19 @@ const Account: React.FC = () => {
     getUser();
   }, []);
 
+  useEffect(() => {
+    const isLoggedIn = async () => {
+      try {
+        await AuthService.getInstance().userInfoForToken(
+          localStorage.getItem("token") as string
+        );
+      } catch (error) {
+        console.log("Not logged in", error);
+        navigate("/login");
+      }
+    };
+    isLoggedIn();
+  }, []);
   return (
     <>
       <div style={{ position: "absolute", top: 0, width: "100%" }}>

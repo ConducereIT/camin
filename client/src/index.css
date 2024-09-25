@@ -131,3 +131,7 @@ button:focus-visible {
 .btn-secondary{
     color: #212529 !important;
 }
+
+.btn-light:hover{
+  background: #ffffff !important;
+}

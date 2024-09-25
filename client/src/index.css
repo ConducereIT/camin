@@ -22,12 +22,24 @@ a.btn.btn-outline-light{
 
 
 a.fc-col-header-cell-cushion{
-  color: #e08e00;
+  color: black;
 }
 
 a.fc-col-header-cell-cushion:hover {
-  color: #777777;
+  color: black;
   
+}
+
+.fc-scrollgrid-sync-inner{
+ background-color: #ffffff;
+}
+
+.fc-v-event .fc-event-main{
+  color:black !important;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #projects-tabs-tab-first.nav-link{
@@ -36,7 +48,7 @@ a.fc-col-header-cell-cushion:hover {
 }
 
 #projects-tabs-tab-first.nav-link.active{
-  background-color: #FFAE1F;
+  background-color: #fff3d1;
   color: #ffffff;
 }
 #projects-tabs-tab-second.nav-link {
@@ -45,7 +57,7 @@ a.fc-col-header-cell-cushion:hover {
 }
 
 #projects-tabs-tab-second.nav-link.active {
-  background-color: #FFAE1F;
+  background-color: #fff3d1;
   color: #ffffff;
 }
 #projects-tabs-tab-third.nav-link {
@@ -54,7 +66,7 @@ a.fc-col-header-cell-cushion:hover {
 }
 
 #projects-tabs-tab-third.nav-link.active {
-  background-color: #FFAE1F;
+  background-color: #fff3d1;
   color: #ffffff;
 }
 
@@ -64,11 +76,13 @@ a.fc-col-header-cell-cushion:hover {
 }
 
 #projects-tabs-tab-four.nav-link.active {
-  background-color: #FFAE1F;
+  background-color: #fff3d1;
   color: #ffffff;
 }
 
-
+.fc-timegrid{
+  border-radius: 10px !important;
+}
 
 body {
   margin: 0;
@@ -84,19 +98,23 @@ h1 {
   line-height: 1.1;
 }
 
-div.fc-event-title-container{
-    background-color: #FFAE1F;
-    border-color: #FFAE1F;
-}
 div.fc-event-time {
-  background-color: #fca309;
+  background-color: #fff3d1;
+  color:black;
+  border-radius: 2px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-div.fc-event-maine {
-border-color: #FFAE1F;}
+
+
 a.fc-event{
-  border-color: #FFAE1F;
-  background-color: #fca309;
+  border-color: #000 !important;
+  color: #000000 !important;
+  background-color: #fff;
 }
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -133,5 +151,34 @@ button:focus-visible {
 }
 
 .btn-light:hover{
+  background: #fff3d1 !important;
+}
+
+button{
   background: #ffffff !important;
+  color:#000 !important;
+}
+
+.fc-today-button{
+  background: #ffffff !important;
+}
+
+.fc-today-button:hover{
+  background: #fff3d1 !important;
+}
+
+.fc-button{
+  background: #ffffff !important;
+}
+
+.fc-button:hover{
+  background: #fff3d1 !important;
+}
+
+.bg-hover-primary:hover{
+  background: #fff3d1 !important;
+}
+
+.fc-toolbar-title{
+  font-size: 1.25rem !important;
 }

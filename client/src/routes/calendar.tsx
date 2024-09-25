@@ -93,22 +93,22 @@ const Calendars: React.FC = () => {
                       activeKey={activeTab}
                       onSelect={handleTabChange}
                     >
-                      <Nav
-                        variant="pills"
-                        className="nav-pills mb-4 justify-content-center flex-wrap"
-                        id="pills-tab"
-                      >
-                        {dayNames.map((day) => (
-                          <Nav.Item key={day} className="me-2 mb-2">
-                            <Nav.Link
-                              eventKey={day}
-                              className={`btn btn-secondary ${activeTab === day ? "active" : ""}`}
-                              style={{ border: "1px solid black" }}
-                            >
-                              {`Mașina ${dayNames.indexOf(day) + 1}`}
-                            </Nav.Link>
-                          </Nav.Item>
-                        ))}
+                      <Nav className="nav-pills mb-4 justify-content-center flex-wrap" id="pills-tab">
+                        <Row className="w-100">
+                          {dayNames.map((day) => (
+                            <Col xs={6} sm={4} md={3} className="mb-2" key={day}>
+                              <Nav.Item>
+                                <Nav.Link
+                                  eventKey={day}
+                                  className={`btn btn-secondary w-100 ${activeTab === day ? "active" : ""}`}
+                                  style={{ border: "1px solid black" }}
+                                >
+                                  {`Mașina ${dayNames.indexOf(day) + 1}`}
+                                </Nav.Link>
+                              </Nav.Item>
+                            </Col>
+                          ))}
+                        </Row>
                       </Nav>
                       <Tab.Content>
                         {dayNames.map((day) => (

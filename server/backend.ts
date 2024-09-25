@@ -523,6 +523,36 @@ export class BackendService {
     }
   }
 
+  @GenezioMethod({type: "cron", cronString: "*/5 * * * *"})
+  async removeDuplicatesEvent(){
+    try {
+      const events = await this.prisma.events.findMany();
+      const eventsToDelete = [];
+      for (let i = 0; i < events.length; i++) {
+        for (let j = i + 1; j < events.length; j++) {
+          if (
+            events[i].title === events[j].title &&
+            events[i].start_event.getTime() === events[j].start_event.getTime() &&
+            events[i].end_event.getTime() === events[j].end_event.getTime() &&
+            events[i].calendar_n === events[j].calendar_n
+          ) {
+            eventsToDelete.push(events[j].id);
+          }
+        }
+      }
+
+      for (let i = 0; i < eventsToDelete.length; i++) {
+        await this.prisma.events.deleteMany({
+          where: {
+            id: eventsToDelete[i],
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Eroare internă. Te rog reîncearcă mai târziu!", error);
+    }
+  }
+
   @GenezioAuth()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getNumberUsers(context: GnzContext): Promise<number> {

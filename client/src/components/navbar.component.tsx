@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { AuthService } from "@genezio/auth";
+import {useEffect, useState} from "react";
+import {AuthService} from "@genezio/auth";
 import LogoWhite from "../assets/Logo fata.svg";
 
 export const NavbarComponent = () => {
@@ -9,11 +9,7 @@ export const NavbarComponent = () => {
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      if (offset > 5) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(offset > 5);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -74,18 +70,21 @@ export const NavbarComponent = () => {
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span className="navbar-toggler-icon"></span>
+            <span
+              className="navbar-toggler-icon"
+            ></span>
           </button>
 
           <div className="collapse navbar-collapse" id="navbarNav">
             <div className="d-flex ms-auto align-items-center">
-              <a className="btn btn-light me-2" href="/account" style={{border:"1px solid black"}}>
+              <a className="btn btn-light me-2" href="/account" style={{border: "1px solid black"}}>
                 Cont
               </a>
-              <a className="btn btn-light me-2" href="/myappointments" style={{border:"1px solid black"}}>
+              <a className="btn btn-light me-2" href="/myappointments" style={{border: "1px solid black"}}>
                 Programări
               </a>
-              <a className="btn btn-light me-2" href="mailto:rezervaricaminleu@gmail.com" style={{border:"1px solid black"}}>
+              <a className="btn btn-light me-2" href="mailto:rezervaricaminleu@gmail.com"
+                 style={{border: "1px solid black"}}>
                 Contact
               </a>
               <a
@@ -94,7 +93,7 @@ export const NavbarComponent = () => {
                   await AuthService.getInstance().logout();
                   window.location.reload();
                 }}
-                style={{border:"1px solid black"}}
+                style={{border: "1px solid black"}}
               >
                 Logout
               </a>
@@ -103,7 +102,7 @@ export const NavbarComponent = () => {
         </div>
       </nav>
 
-      <div style={{ height: navbarHeight }}></div>
+      <div style={{height: navbarHeight}}></div>
     </>
   );
 };

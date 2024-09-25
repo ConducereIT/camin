@@ -111,7 +111,7 @@ button {
 }
 
 button:hover {
-  border-color: #646cff;
+  border-color: #FFAE1F;
 }
 
 button:focus,
@@ -121,4 +121,13 @@ button:focus-visible {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+.btn-secondary:hover{
+    background-color: #fff3d1 !important;
+    color: #000 !important;
+}
+
+.btn-secondary{
+    color: #212529 !important;
 }

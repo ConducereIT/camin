@@ -498,6 +498,31 @@ export class BackendService {
     }
   }
 
+  @GenezioMethod({type: "cron", cronString: "0 1 * * *"})
+  async clearDatabase(){
+    // Clear the database if the event is in the month before the current month
+    try {
+      const events = await this.prisma.events.findMany({
+        where: {
+          start_event: {
+            lt: new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000),
+          },
+        },
+      });
+
+      for (let i = 0; i < events.length; i++) {
+        await this.prisma.events.deleteMany({
+          where: {
+            id: events[i].id,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Eroare internă. Te rog reîncearcă mai târziu!", error
+      );
+    }
+  }
+
   @GenezioAuth()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getNumberUsers(context: GnzContext): Promise<number> {
@@ -562,7 +587,14 @@ export class BackendService {
           };
         }
 
-        if(findEventToDeleted.title.split(" ").includes(context.user?.name!)){
+        if (!context.user?.email) {
+          return {
+            status: false,
+            message: "Eroare. Te rog reincearca mai tarziu!",
+          };
+        }
+        
+        if(findEventToDeleted.title.split(" ").includes(context.user?.name || "")){
           return {
             status: false,
             message: "Nu poti sterge evenimentul altcuiva!",

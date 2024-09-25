@@ -4,6 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { BackendService } from "@genezio-sdk/camin-runtime";
+import { Modal, Button } from "react-bootstrap";
 
 interface RenderCalendarProps {
   dayCalendar: string;
@@ -16,6 +17,8 @@ const RenderCalendarMobile: React.FC<RenderCalendarProps> = ({
   eventsDate,
 }) => {
   const [notification, setNotification] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<any | null>(null);
 
   const showNotification = (message: string) => {
     setNotification(message);
@@ -24,9 +27,14 @@ const RenderCalendarMobile: React.FC<RenderCalendarProps> = ({
     }, 5000);
   };
 
-  const handleDateClick = async (arg: any) => {
-    const startDate = arg.startStr;
-    const endDate = arg.endStr;
+  const handleDateClick = (arg: any) => {
+    setSelectedDate(arg);
+    setShowModal(true);
+  };
+
+  const handleConfirmReservation = async () => {
+    const startDate = selectedDate.startStr;
+    const endDate = selectedDate.endStr;
 
     const getUserInfo = await BackendService.getInfoUser();
     try {
@@ -35,7 +43,7 @@ const RenderCalendarMobile: React.FC<RenderCalendarProps> = ({
         endDate,
         dayCalendar,
         getUserInfo.phone,
-        getUserInfo.camera,
+        getUserInfo.camera
       );
 
       if (status.status) {
@@ -46,6 +54,7 @@ const RenderCalendarMobile: React.FC<RenderCalendarProps> = ({
     } catch (error) {
       showNotification(String(error));
     }
+    setShowModal(false);
   };
 
   const handleEventClick = async (event: any) => {
@@ -54,7 +63,7 @@ const RenderCalendarMobile: React.FC<RenderCalendarProps> = ({
       const endDate = event.event.endStr;
       const deleteEvents = await BackendService.deletePerson(
         startDate,
-        endDate,
+        endDate
       );
 
       if (deleteEvents.status) {
@@ -104,6 +113,35 @@ const RenderCalendarMobile: React.FC<RenderCalendarProps> = ({
         events={eventsForDay}
         eventClick={handleEventClick}
       />
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirma rezervarea</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Esti sigur ca vrei sa rezervi pe data de{" "}
+          {new Date(selectedDate?.startStr).toLocaleDateString("ro-RO")}{" "}
+          intervalul orar{" "}
+          {new Date(selectedDate?.startStr).toLocaleTimeString("ro-RO", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}{" "}
+          -
+          {new Date(selectedDate?.endStr).toLocaleTimeString("ro-RO", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+          ?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleConfirmReservation}>
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

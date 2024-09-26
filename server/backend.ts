@@ -652,4 +652,17 @@ export class BackendService {
       };
     }
   }
+
+  async isMaintenance(){
+    try {
+      const maintenance = await this.prisma.maintenance.findFirst();
+      if(maintenance){
+        return {"status":maintenance.status,"date":maintenance.date};
+      }
+      return false;
+    } catch (error) {
+      console.error("Eroare internă. Te rog reîncearcă mai târziu!", error);
+      return false;
+    }
+  }
 }

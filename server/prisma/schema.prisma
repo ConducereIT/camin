@@ -25,3 +25,9 @@ model infoUser {
   phone  String
   camera String
 }
+
+model maintenance {
+  id     Int    @id @default(autoincrement())
+  status Boolean
+  date   DateTime?
+}

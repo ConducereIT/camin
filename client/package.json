@@ -21,6 +21,7 @@
     "@genezio/vite-plugin-genezio": "^1.0.4",
     "@react-oauth/google": "^0.12.1",
     "bootstrap": "^5.3.3",
+    "camin": "file:",
     "googleapis": "^133.0.0",
     "local-storage": "^2.0.0",
     "react": "^18.2.0",

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { BackendService } from "@genezio-sdk/camin-runtime";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Toast, ToastContainer } from "react-bootstrap";
 
 interface RenderCalendarProps {
   dayCalendar: string;
@@ -13,17 +13,20 @@ interface RenderCalendarProps {
 }
 
 const RenderCalendarMobile: React.FC<RenderCalendarProps> = ({
-  dayCalendar,
-  eventsDate,
-}) => {
+                                                               dayCalendar,
+                                                               eventsDate,
+                                                             }) => {
   const [notification, setNotification] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<any | null>(null);
+  const calendarRef = useRef<any>(null);
 
   const showNotification = (message: string) => {
     setNotification(message);
+    setShowToast(true);
     setTimeout(() => {
-      setNotification(null);
+      setShowToast(false);
     }, 5000);
   };
 
@@ -84,10 +87,20 @@ const RenderCalendarMobile: React.FC<RenderCalendarProps> = ({
   }
 
   return (
-    <div className="calendar">
-      {notification && (
-        <div className="notification alert alert-info">{notification}</div>
-      )}
+    <div className="calendar" ref={calendarRef}>
+      {/* ToastContainer for notifications */}
+      <ToastContainer
+        position="top-end"
+        style={{ position: "fixed", top: 10, right: 10, zIndex: 1000, paddingTop: "6.5rem", paddingRight: "1rem" }}
+      >
+        <Toast show={showToast} onClose={() => setShowToast(false)} delay={5000} autohide>
+          <Toast.Header>
+            <strong className="me-auto">Notificare</strong>
+          </Toast.Header>
+          <Toast.Body>{notification}</Toast.Body>
+        </Toast>
+      </ToastContainer>
+
       <FullCalendar
         plugins={[timeGridPlugin, interactionPlugin, dayGridPlugin]}
         themeSystem={"standard"}
@@ -116,17 +129,17 @@ const RenderCalendarMobile: React.FC<RenderCalendarProps> = ({
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirma rezervarea</Modal.Title>
+          <Modal.Title>Confirmă rezervarea</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Esti sigur ca vrei sa rezervi pe data de{" "}
+          Ești sigur că vrei să rezervi pe data de{" "}
           {new Date(selectedDate?.startStr).toLocaleDateString("ro-RO")}{" "}
           intervalul orar{" "}
           {new Date(selectedDate?.startStr).toLocaleTimeString("ro-RO", {
             hour: "2-digit",
             minute: "2-digit",
           })}{" "}
-          -
+          -{" "}
           {new Date(selectedDate?.endStr).toLocaleTimeString("ro-RO", {
             hour: "2-digit",
             minute: "2-digit",
@@ -134,11 +147,11 @@ const RenderCalendarMobile: React.FC<RenderCalendarProps> = ({
           ?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancel
+          <Button variant="btn btn-secondary" onClick={() => setShowModal(false)}>
+            Anulează
           </Button>
-          <Button variant="primary" onClick={handleConfirmReservation}>
-            Confirm
+          <Button variant="btn btn-secondary" onClick={handleConfirmReservation}>
+            Confirmă
           </Button>
         </Modal.Footer>
       </Modal>

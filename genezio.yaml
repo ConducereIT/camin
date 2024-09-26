@@ -19,4 +19,5 @@ frontend:
       - npm install
       - npm run build
     local: npm install
+    start: npm run dev
   subdomain: aquamarine-minimal-crocodile

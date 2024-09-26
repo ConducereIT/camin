@@ -4,7 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { BackendService } from "@genezio-sdk/camin-runtime";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Toast, ToastContainer } from "react-bootstrap";
 
 interface RenderCalendarProps {
   dayCalendar: string;
@@ -20,12 +20,14 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
   const [hoveredEvent, setHoveredEvent] = useState<any | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<any | null>(null);
+  const [showToast, setShowToast] = useState(false);
   const calendarRef = useRef<any>(null);
 
   const showNotification = (message: string) => {
     setNotification(message);
+    setShowToast(true);
     setTimeout(() => {
-      setNotification(null);
+      setShowToast(false);
     }, 5000);
   };
 
@@ -89,9 +91,18 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
 
   return (
     <div className="calendar" ref={calendarRef}>
-      {notification && (
-        <div className="notification alert alert-info mb-5">{notification}</div>
-      )}
+      <ToastContainer
+        position="top-end"
+        style={{ position: "fixed", top: 10, right: 10, zIndex: 1000, paddingTop:"6.5rem", paddingRight:"1rem", }}
+      >
+        <Toast show={showToast} onClose={() => setShowToast(false)} delay={5000} autohide style={{background:"white"}}>
+          <Toast.Header>
+            <strong className="me-auto">Notificare</strong>
+          </Toast.Header>
+          <Toast.Body>{notification}</Toast.Body>
+        </Toast>
+      </ToastContainer>
+
       {hoveredEvent && (
         <div
           className="hovered-event-popup bg-light border p-3 position-absolute z-3"
@@ -142,10 +153,10 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirma rezervarea</Modal.Title>
+          <Modal.Title>Confirmă rezervarea</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Esti sigur ca vrei sa rezervi pe data de{" "}
+          Ești sigur că vrei să rezervi pe data de{" "}
           {new Date(selectedDate?.startStr).toLocaleDateString("ro-RO")}{" "}
           intervalul orar{" "}
           {new Date(selectedDate?.startStr).toLocaleTimeString("ro-RO", {
@@ -161,10 +172,10 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Anuleaza
+            Anulează
           </Button>
-          <Button variant="primary" onClick={handleConfirmReservation}>
-            Confirma
+          <Button variant="secondary" onClick={handleConfirmReservation}>
+            Confirmă
           </Button>
         </Modal.Footer>
       </Modal>

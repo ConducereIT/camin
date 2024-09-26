@@ -1,10 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { BackendService } from "@genezio-sdk/camin-runtime";
-import { Modal, Button, Toast, ToastContainer } from "react-bootstrap";
+import { Modal, Button, Toast, ToastContainer, Spinner } from "react-bootstrap";
+import {AuthService} from "@genezio/auth";
 
 interface RenderCalendarProps {
   dayCalendar: string;
@@ -21,7 +22,18 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<any | null>(null);
   const [showToast, setShowToast] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
   const calendarRef = useRef<any>(null);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const response = await AuthService.getInstance().userInfo();
+      setUserName(response.name!);
+    };
+
+    fetchUserInfo();
+  }, []);
 
   const showNotification = (message: string) => {
     setNotification(message);
@@ -38,6 +50,7 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
 
   const handleConfirmReservation = async () => {
     if (!selectedDate) return;
+    setLoading(true);
 
     const startDate = selectedDate.startStr;
     const endDate = selectedDate.endStr;
@@ -59,18 +72,18 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
       }
     } catch (error) {
       showNotification(String(error));
+    } finally {
+      setLoading(false);
     }
     setShowModal(false);
   };
 
   const handleEventClick = async (event: any) => {
+    setLoading(true);
     try {
       const startDate = event.event.startStr;
       const endDate = event.event.endStr;
-      const deleteEvents = await BackendService.deletePerson(
-        startDate,
-        endDate
-      );
+      const deleteEvents = await BackendService.deletePerson(startDate, endDate);
 
       if (deleteEvents.status) {
         showNotification(deleteEvents.message);
@@ -80,10 +93,22 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
       }
     } catch (error) {
       showNotification(String(error));
+    } finally {
+      setLoading(false);
     }
   };
 
   const eventsForDay = eventsDate && eventsDate[dayCalendar];
+
+  const styledEvents = eventsForDay?.map((event) => {
+    if (userName && event.title.includes(userName)) {
+      return {
+        ...event,
+        className: "user-event",
+      };
+    }
+    return event;
+  });
 
   if (!eventsForDay || eventsForDay.length === 0) {
     return null;
@@ -93,9 +118,9 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
     <div className="calendar" ref={calendarRef}>
       <ToastContainer
         position="top-end"
-        style={{ position: "fixed", top: 10, right: 10, zIndex: 1000, paddingTop:"6.5rem", paddingRight:"1rem", }}
+        style={{ position: "fixed", top: 10, right: 10, zIndex: 1000, paddingTop: "6.5rem", paddingRight: "1rem" }}
       >
-        <Toast show={showToast} onClose={() => setShowToast(false)} delay={5000} autohide style={{background:"white"}}>
+        <Toast show={showToast} onClose={() => setShowToast(false)} delay={5000} autohide style={{ background: "white" }}>
           <Toast.Header>
             <strong className="me-auto">Notificare</strong>
           </Toast.Header>
@@ -141,7 +166,7 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
         eventDisplay="block"
         dayHeaders={true}
         weekends={true}
-        events={eventsForDay}
+        events={styledEvents}
         eventClick={handleEventClick}
         eventMouseEnter={(arg) => {
           setHoveredEvent(arg);
@@ -163,7 +188,7 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
             hour: "2-digit",
             minute: "2-digit",
           })}{" "}
-          -
+          -{" "}
           {new Date(selectedDate?.endStr).toLocaleTimeString("ro-RO", {
             hour: "2-digit",
             minute: "2-digit",
@@ -174,8 +199,21 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Anulează
           </Button>
-          <Button variant="secondary" onClick={handleConfirmReservation}>
-            Confirmă
+          <Button variant="secondary" onClick={handleConfirmReservation} disabled={loading}>
+            {loading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />{" "}
+                Se încarcă...
+              </>
+            ) : (
+              "Confirmă"
+            )}
           </Button>
         </Modal.Footer>
       </Modal>

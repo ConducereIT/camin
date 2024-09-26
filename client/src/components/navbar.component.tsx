@@ -1,10 +1,11 @@
-import {useEffect, useState} from "react";
-import {AuthService} from "@genezio/auth";
+import { useEffect, useState } from "react";
+import { AuthService } from "@genezio/auth";
 import LogoWhite from "../assets/Logo fata.svg";
 
 export const NavbarComponent = () => {
   const [scrolled, setScrolled] = useState(false);
   const [navbarHeight, setNavbarHeight] = useState(0);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,6 +25,10 @@ export const NavbarComponent = () => {
       setNavbarHeight(navbar.clientHeight);
     }
   }, []);
+
+  const handleToggle = () => {
+    setIsCollapsed(!isCollapsed);
+  };
 
   return (
     <>
@@ -59,20 +64,22 @@ export const NavbarComponent = () => {
             />
           </a>
 
-          <button
+          <a
             className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarNav"
             aria-controls="navbarNav"
-            aria-expanded="false"
+            aria-expanded={!isCollapsed}
             aria-label="Toggle navigation"
+            style={{ background: "white" }}
+            onClick={handleToggle}
           >
             <span className="navbar-toggler-icon"></span>
-          </button>
+          </a>
 
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <div className="d-flex ms-auto align-items-center">
+          <div className={`collapse navbar-collapse ${isCollapsed ? "" : "show"}`} id="navbarNav">
+            <div className="d-flex justify-content-end" style={{ flexDirection: "row", width: "100%" }}>
               <a className="btn btn-light me-2" href="/account" style={{ border: "1px solid black" }}>
                 Cont
               </a>

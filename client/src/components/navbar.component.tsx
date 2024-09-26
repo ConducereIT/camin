@@ -28,9 +28,7 @@ export const NavbarComponent = () => {
   return (
     <>
       <nav
-        className={`navbar navbar-dark navbar-expand-lg fixed-top shadow-sm ${
-          scrolled ? "scrolled" : ""
-        }`}
+        className={`navbar navbar-dark navbar-expand-lg fixed-top shadow-sm ${scrolled ? "scrolled" : ""}`}
         style={{
           backgroundColor: "#FFAE1F",
           transition: "all 0.5s ease-in-out",
@@ -70,21 +68,18 @@ export const NavbarComponent = () => {
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span
-              className="navbar-toggler-icon"
-            ></span>
+            <span className="navbar-toggler-icon"></span>
           </button>
 
           <div className="collapse navbar-collapse" id="navbarNav">
             <div className="d-flex ms-auto align-items-center">
-              <a className="btn btn-light me-2" href="/account" style={{border: "1px solid black"}}>
+              <a className="btn btn-light me-2" href="/account" style={{ border: "1px solid black" }}>
                 Cont
               </a>
-              <a className="btn btn-light me-2" href="/myappointments" style={{border: "1px solid black"}}>
+              <a className="btn btn-light me-2" href="/myappointments" style={{ border: "1px solid black" }}>
                 Programări
               </a>
-              <a className="btn btn-light me-2" href="mailto:rezervaricaminleu@gmail.com"
-                 style={{border: "1px solid black"}}>
+              <a className="btn btn-light me-2" href="mailto:rezervaricaminleu@gmail.com" style={{ border: "1px solid black" }}>
                 Contact
               </a>
               <a
@@ -93,7 +88,7 @@ export const NavbarComponent = () => {
                   await AuthService.getInstance().logout();
                   window.location.reload();
                 }}
-                style={{border: "1px solid black"}}
+                style={{ border: "1px solid black" }}
               >
                 Logout
               </a>
@@ -102,7 +97,7 @@ export const NavbarComponent = () => {
         </div>
       </nav>
 
-      <div style={{height: navbarHeight}}></div>
+      <div style={{ height: navbarHeight }}></div>
     </>
   );
 };

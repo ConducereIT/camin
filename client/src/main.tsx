@@ -8,6 +8,8 @@ import {GoogleOAuthProvider} from "@react-oauth/google";
 import {AuthService} from "@genezio/auth";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import('bootstrap/dist/js/bootstrap.bundle.min.js');
+
 import Account from "./routes/account.tsx";
 import Admin from "./routes/admin.tsx";
 import MyAppointments from "./routes/myAppointments.tsx";

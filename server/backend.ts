@@ -665,4 +665,22 @@ export class BackendService {
       return false;
     }
   }
+
+  async disableMaintenance(){
+    try{
+      const maintenance = await this.prisma.maintenance.findFirst();
+      if(maintenance){
+        await this.prisma.maintenance.update({
+          where: {id: maintenance.id},
+          data: {
+            status: !maintenance.status,
+          },
+        });
+        return true;
+      }
+    }catch (error) {
+      console.error("Eroare internă. Te rog reîncearcă mai târziu!", error);
+      return false;
+    }
+  }
 }

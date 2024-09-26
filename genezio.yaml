@@ -8,6 +8,7 @@ backend:
     packageManager: npm
   scripts:
     deploy: npm install
+    local: npm install
 frontend:
   path: client
   sdk:
@@ -17,4 +18,6 @@ frontend:
     deploy:
       - npm install
       - npm run build
+    local: npm install
+    start: npm run dev
   subdomain: aquamarine-minimal-crocodile

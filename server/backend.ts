@@ -498,6 +498,61 @@ export class BackendService {
     }
   }
 
+  @GenezioMethod({type: "cron", cronString: "0 1 * * *"})
+  async clearDatabase(){
+    // Clear the database if the event is in the month before the current month
+    try {
+      const events = await this.prisma.events.findMany({
+        where: {
+          start_event: {
+            lt: new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000),
+          },
+        },
+      });
+
+      for (let i = 0; i < events.length; i++) {
+        await this.prisma.events.deleteMany({
+          where: {
+            id: events[i].id,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Eroare internă. Te rog reîncearcă mai târziu!", error
+      );
+    }
+  }
+
+  @GenezioMethod({type: "cron", cronString: "*/5 * * * *"})
+  async removeDuplicatesEvent(){
+    try {
+      const events = await this.prisma.events.findMany();
+      const eventsToDelete = [];
+      for (let i = 0; i < events.length; i++) {
+        for (let j = i + 1; j < events.length; j++) {
+          if (
+            events[i].title === events[j].title &&
+            events[i].start_event.getTime() === events[j].start_event.getTime() &&
+            events[i].end_event.getTime() === events[j].end_event.getTime() &&
+            events[i].calendar_n === events[j].calendar_n
+          ) {
+            eventsToDelete.push(events[j].id);
+          }
+        }
+      }
+
+      for (let i = 0; i < eventsToDelete.length; i++) {
+        await this.prisma.events.deleteMany({
+          where: {
+            id: eventsToDelete[i],
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Eroare internă. Te rog reîncearcă mai târziu!", error);
+    }
+  }
+
   @GenezioAuth()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getNumberUsers(context: GnzContext): Promise<number> {
@@ -562,7 +617,14 @@ export class BackendService {
           };
         }
 
-        if(findEventToDeleted.title.split(" ").includes(context.user?.name!)){
+        if (!context.user?.email) {
+          return {
+            status: false,
+            message: "Eroare. Te rog reincearca mai tarziu!",
+          };
+        }
+        
+        if(findEventToDeleted.title.split(" ").includes(context.user?.name || "")){
           return {
             status: false,
             message: "Nu poti sterge evenimentul altcuiva!",
@@ -588,6 +650,37 @@ export class BackendService {
         status: false,
         message: "Eroare. Te rog reincearca mai tarziu!",
       };
+    }
+  }
+
+  async isMaintenance(){
+    try {
+      const maintenance = await this.prisma.maintenance.findFirst();
+      if(maintenance){
+        return {"status":maintenance.status,"date":maintenance.date};
+      }
+      return false;
+    } catch (error) {
+      console.error("Eroare internă. Te rog reîncearcă mai târziu!", error);
+      return false;
+    }
+  }
+
+  async disableMaintenance(){
+    try{
+      const maintenance = await this.prisma.maintenance.findFirst();
+      if(maintenance){
+        await this.prisma.maintenance.update({
+          where: {id: maintenance.id},
+          data: {
+            status: !maintenance.status,
+          },
+        });
+        return true;
+      }
+    }catch (error) {
+      console.error("Eroare internă. Te rog reîncearcă mai târziu!", error);
+      return false;
     }
   }
 }

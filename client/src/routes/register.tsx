@@ -1,27 +1,28 @@
-import React, {useEffect, useState} from "react";
-import {CredentialResponse, GoogleLogin} from "@react-oauth/google";
-import {AuthService} from "@genezio/auth";
-import {useNavigate} from "react-router-dom";
-import {BackendService} from "@genezio-sdk/camin-runtime";
+import React, { useEffect, useState } from "react";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { AuthService } from "@genezio/auth";
+import { useNavigate } from "react-router-dom";
+import { BackendService } from "@genezio-sdk/camin-runtime";
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const navigate = useNavigate();
-  const [loginLoading, setLoginLoading] = useState(false);
+  const [registerLoading, setRegisterLoading] = useState(false);
   const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setLoginLoading(true);
+    setRegisterLoading(true);
 
     try {
-      await AuthService.getInstance().login(email, password);
-      navigate("/");
+      await AuthService.getInstance().register(email, password, name);
+      navigate("/login");
     } catch (error: any) {
       alert(error.message);
     }
-    setLoginLoading(false);
+    setRegisterLoading(false);
   };
 
   useEffect(() => {
@@ -35,8 +36,7 @@ const Login: React.FC = () => {
 
         if (isMounted && response && await BackendService.checkHasPhoneAndCamera()) {
           navigate("/");
-        }
-        else{
+        } else {
           navigate("/account");
         }
       } catch (error) {
@@ -74,11 +74,13 @@ const Login: React.FC = () => {
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
-      <div className="card p-4" style={{maxWidth: '400px', width: '100%'}}>
+      <div className="card p-4" style={{ maxWidth: '400px', width: '100%' }}>
         <div className="mb-1 text-center">
           <div className="d-flex justify-content-center">
             {googleLoginLoading ? (
-              <div className="text-muted">Loading...</div>
+              <div className="spinner-border text-muted" role="status" style={{ width: '3rem', height: '3rem' }}>
+                <span className="visually-hidden">Loading...</span>
+              </div>
             ) : (
               <GoogleLogin
                 onSuccess={(credentialResponse) => {
@@ -104,6 +106,19 @@ const Login: React.FC = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group mb-3">
+            <label htmlFor="name" className="form-label">
+              Nume:
+            </label>
+            <input
+              type="text"
+              id="name"
+              className="form-control"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group mb-3">
             <label htmlFor="email" className="form-label">
               Email:
             </label>
@@ -113,6 +128,7 @@ const Login: React.FC = () => {
               className="form-control"
               value={email}
               onChange={e => setEmail(e.target.value)}
+              required
             />
           </div>
           <div className="form-group mb-3">
@@ -125,26 +141,21 @@ const Login: React.FC = () => {
               className="form-control"
               value={password}
               onChange={e => setPassword(e.target.value)}
+              required
             />
           </div>
-          {/*<div className="mb-3 text-end">*/}
-          {/*  <a href="/forgot-password" className="text-decoration-none" style={{color: "#212529"}}>*/}
-          {/*    Ai uitat parola?*/}
-          {/*  </a>*/}
-          {/*</div>*/}
           <button
             type="submit"
             className="btn btn-secondary w-100"
-            style={{background:"#FFAE1F"}}
           >
-            {loginLoading ? "Loading..." : "Autentificare"}
+            {registerLoading ? "Loading..." : "Crează cont"}
           </button>
           <button
             type="button"
-            onClick={() => navigate('/signup')}
+            onClick={() => navigate('/login')}
             className="btn btn-secondary w-100 mt-3"
           >
-            Crează cont
+            Autentificare
           </button>
         </form>
       </div>
@@ -152,4 +163,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Register;

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Col, Container, Nav, Row, Tab } from "react-bootstrap";
+import { Col, Container, Nav, Row, Tab, Card } from "react-bootstrap";
 import CalendarComponent from "../components/calendar.component.tsx";
 import CalendarMobileComponent from "../components/calendar.mobile.component.tsx";
 import { BackendService } from "@genezio-sdk/camin-runtime";
@@ -56,7 +56,7 @@ const Calendars: React.FC = () => {
     const isLoggedIn = async () => {
       try {
         await AuthService.getInstance().userInfoForToken(
-          localStorage.getItem("token") as string,
+          localStorage.getItem("token") as string
         );
         await initializeDefaultTab();
       } catch (error) {
@@ -68,73 +68,86 @@ const Calendars: React.FC = () => {
   }, [navigate]);
 
   useEffect(() => {
-    if (window.innerWidth < 768) {
-      setIsMobile(true);
-    }
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
     <>
       <NavbarComponent />
-      <section className="project calendare" id="project">
+      <section className="project calendare" id="project" style={{ backgroundColor: '#fff3d1' }}>
         <Container>
           <Row>
-            <Col size={12}>
+            <Col xs={12}>
               <div className="mt-5">
-                <Tab.Container
-                  id="projects-tabs"
-                  activeKey={activeTab}
-                  onSelect={handleTabChange}
-                >
-                  <Nav
-                    variant="pills"
-                    className="nav-pills mb-5 justify-content-center align-items-center"
-                    id="pills-tab"
-                  >
-                    {dayNames.map((day) => (
-                      <Nav.Item key={day}>
-                        <Nav.Link eventKey={day}>{`Mașina ${
-                          dayNames.indexOf(day) + 1
-                        }`}</Nav.Link>
-                      </Nav.Item>
-                    ))}
-                  </Nav>
-                  <Tab.Content>
-                    {dayNames.map((day) => (
-                      <Tab.Pane key={day} eventKey={day}>
-                        <Row>
-                          <Col size={12}>
-                            {isMobile ? (
-                              <CalendarMobileComponent
-                                dayCalendar={day}
-                                key={day}
-                                eventsDate={eventsDate}
-                                updateEventsDate={(newEvents) => {
-                                  setEventsDate((prevEvents) => ({
-                                    ...prevEvents,
-                                    [day]: newEvents,
-                                  }));
-                                }}
-                              />
-                            ) : (
-                              <CalendarComponent
-                                dayCalendar={day}
-                                key={day}
-                                eventsDate={eventsDate}
-                                updateEventsDate={(newEvents) => {
-                                  setEventsDate((prevEvents) => ({
-                                    ...prevEvents,
-                                    [day]: newEvents,
-                                  }));
-                                }}
-                              />
-                            )}
-                          </Col>
+                <Card className="shadow-sm">
+                  <Card.Body>
+                    <Tab.Container
+                      id="projects-tabs"
+                      activeKey={activeTab}
+                      onSelect={handleTabChange}
+                    >
+                      <Nav className="nav-pills mb-4 justify-content-center flex-wrap" id="pills-tab">
+                        <Row className="w-100">
+                          {dayNames.map((day) => (
+                            <Col xs={6} sm={4} md={3} className="mb-2" key={day}>
+                              <Nav.Item>
+                                <Nav.Link
+                                  eventKey={day}
+                                  className={`btn btn-secondary w-100 ${activeTab === day ? "active" : ""}`}
+                                  style={{ border: "1px solid black" }}
+                                >
+                                  {`Mașina ${dayNames.indexOf(day) + 1}`}
+                                </Nav.Link>
+                              </Nav.Item>
+                            </Col>
+                          ))}
                         </Row>
-                      </Tab.Pane>
-                    ))}
-                  </Tab.Content>
-                </Tab.Container>
+                      </Nav>
+                      <Tab.Content>
+                        {dayNames.map((day) => (
+                          <Tab.Pane key={day} eventKey={day}>
+                            <Row>
+                              <Col xs={12}>
+                                {isMobile ? (
+                                  <CalendarMobileComponent
+                                    dayCalendar={day}
+                                    key={day}
+                                    eventsDate={eventsDate}
+                                    updateEventsDate={(newEvents) => {
+                                      setEventsDate((prevEvents) => ({
+                                        ...prevEvents,
+                                        [day]: newEvents,
+                                      }));
+                                    }}
+                                  />
+                                ) : (
+                                  <CalendarComponent
+                                    dayCalendar={day}
+                                    key={day}
+                                    eventsDate={eventsDate}
+                                    updateEventsDate={(newEvents) => {
+                                      setEventsDate((prevEvents) => ({
+                                        ...prevEvents,
+                                        [day]: newEvents,
+                                      }));
+                                    }}
+                                  />
+                                )}
+                              </Col>
+                            </Row>
+                          </Tab.Pane>
+                        ))}
+                      </Tab.Content>
+                    </Tab.Container>
+                  </Card.Body>
+                </Card>
               </div>
             </Col>
           </Row>

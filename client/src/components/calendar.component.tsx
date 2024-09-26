@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { BackendService } from "@genezio-sdk/camin-runtime";
+import { Modal, Button, Toast, ToastContainer, Spinner } from "react-bootstrap";
+import {AuthService} from "@genezio/auth";
 
 interface RenderCalendarProps {
   dayCalendar: string;
@@ -12,22 +14,46 @@ interface RenderCalendarProps {
 }
 
 const RenderCalendar: React.FC<RenderCalendarProps> = ({
-  dayCalendar,
-  eventsDate,
-}) => {
+                                                         dayCalendar,
+                                                         eventsDate,
+                                                       }) => {
   const [notification, setNotification] = useState<string | null>(null);
-  const [hoveredEvent, setHoveredEvent] = useState<any | null>(null); // Stare pentru evenimentul peste care mouse-ul a intrat
+  const [hoveredEvent, setHoveredEvent] = useState<any | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<any | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const calendarRef = useRef<any>(null);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const response = await AuthService.getInstance().userInfo();
+      setUserName(response.name!);
+    };
+
+    fetchUserInfo();
+  }, []);
 
   const showNotification = (message: string) => {
     setNotification(message);
+    setShowToast(true);
     setTimeout(() => {
-      setNotification(null);
+      setShowToast(false);
     }, 5000);
   };
 
-  const handleDateClick = async (arg: any) => {
-    const startDate = arg.startStr;
-    const endDate = arg.endStr;
+  const handleDateClick = (arg: any) => {
+    setSelectedDate(arg);
+    setShowModal(true);
+  };
+
+  const handleConfirmReservation = async () => {
+    if (!selectedDate) return;
+    setLoading(true);
+
+    const startDate = selectedDate.startStr;
+    const endDate = selectedDate.endStr;
 
     const getUserInfo = await BackendService.getInfoUser();
     try {
@@ -36,7 +62,7 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
         endDate,
         dayCalendar,
         getUserInfo.phone,
-        getUserInfo.camera,
+        getUserInfo.camera
       );
 
       if (status.status) {
@@ -46,17 +72,18 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
       }
     } catch (error) {
       showNotification(String(error));
+    } finally {
+      setLoading(false);
     }
+    setShowModal(false);
   };
 
   const handleEventClick = async (event: any) => {
+    setLoading(true);
     try {
       const startDate = event.event.startStr;
       const endDate = event.event.endStr;
-      const deleteEvents = await BackendService.deletePerson(
-        startDate,
-        endDate,
-      );
+      const deleteEvents = await BackendService.deletePerson(startDate, endDate);
 
       if (deleteEvents.status) {
         showNotification(deleteEvents.message);
@@ -66,26 +93,53 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
       }
     } catch (error) {
       showNotification(String(error));
+    } finally {
+      setLoading(false);
     }
   };
 
   const eventsForDay = eventsDate && eventsDate[dayCalendar];
 
-  if (!eventsForDay) {
+  const styledEvents = eventsForDay?.map((event) => {
+    if (userName && event.title.includes(userName)) {
+      return {
+        ...event,
+        className: "user-event",
+      };
+    }
+    return event;
+  });
+
+  if (!eventsForDay || eventsForDay.length === 0) {
     return null;
   }
 
   return (
-    <div className="calendar">
-      {notification && (
-        <div className="notification alert alert-info mb-5">{notification}</div>
-      )}
+    <div className="calendar" ref={calendarRef}>
+      <ToastContainer
+        position="top-end"
+        style={{ position: "fixed", top: 10, right: 10, zIndex: 1000, paddingTop: "6.5rem", paddingRight: "1rem" }}
+      >
+        <Toast show={showToast} onClose={() => setShowToast(false)} delay={5000} autohide style={{ background: "white" }}>
+          <Toast.Header>
+            <strong className="me-auto">Notificare</strong>
+          </Toast.Header>
+          <Toast.Body>{notification}</Toast.Body>
+        </Toast>
+      </ToastContainer>
+
       {hoveredEvent && (
         <div
           className="hovered-event-popup bg-light border p-3 position-absolute z-3"
           style={{
-            top: hoveredEvent.jsEvent.clientY + 10,
-            left: hoveredEvent.jsEvent.clientX + 10,
+            top:
+              hoveredEvent.jsEvent.clientY +
+              140 -
+              calendarRef.current.getBoundingClientRect().top,
+            left:
+              hoveredEvent.jsEvent.clientX +
+              60 -
+              calendarRef.current.getBoundingClientRect().left,
           }}
         >
           <p className="mb-1">{hoveredEvent.event.title}</p>
@@ -112,15 +166,57 @@ const RenderCalendar: React.FC<RenderCalendarProps> = ({
         eventDisplay="block"
         dayHeaders={true}
         weekends={true}
-        events={eventsForDay}
+        events={styledEvents}
         eventClick={handleEventClick}
         eventMouseEnter={(arg) => {
-          setHoveredEvent(arg); // Actualizează starea atunci când mouse-ul intră peste un eveniment
+          setHoveredEvent(arg);
         }}
         eventMouseLeave={() => {
-          setHoveredEvent(null); // Resetarea stării când mouse-ul părăsește evenimentul
+          setHoveredEvent(null);
         }}
       />
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmă rezervarea</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Ești sigur că vrei să rezervi pe data de{" "}
+          {new Date(selectedDate?.startStr).toLocaleDateString("ro-RO")}{" "}
+          intervalul orar{" "}
+          {new Date(selectedDate?.startStr).toLocaleTimeString("ro-RO", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}{" "}
+          -{" "}
+          {new Date(selectedDate?.endStr).toLocaleTimeString("ro-RO", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+          ?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Anulează
+          </Button>
+          <Button variant="secondary" onClick={handleConfirmReservation} disabled={loading}>
+            {loading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />{" "}
+                Se încarcă...
+              </>
+            ) : (
+              "Confirmă"
+            )}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

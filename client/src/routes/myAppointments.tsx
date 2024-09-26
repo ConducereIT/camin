@@ -21,7 +21,7 @@ const MyAppointments: React.FC = () => {
       }
     };
     isLoggedIn();
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -54,76 +54,78 @@ const MyAppointments: React.FC = () => {
   return (
     <div style={{ position: "absolute", top: 0, width: "100%" }}>
       <NavbarComponent />
-      <div className="container mt-xl-5">
-        <div className="d-flex justify-content-between">
-          <h1>Programările mele</h1>
-        </div>
-        <div className="table-responsive">
-          <table className="table mt-5">
-            <thead>
-            <tr>
-              <th scope="col">Incepe la</th>
-              <th scope="col">Se termina la</th>
-              <th scope="col">Masina</th>
-              <th scope="col">Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            {Object.values(eventsDate).map((event: any) => (
-              <tr key={event.id}>
-                <td>
-                  {formatDate(event.start, {
-                    day: "numeric",
-                    month: "numeric",
-                    year: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                    hour12: false,
-                  })}
-                </td>
-                <td>
-                  {formatDate(event.end, {
-                    day: "numeric",
-                    month: "numeric",
-                    year: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                    hour12: false,
-                  })}
-                </td>
-                <td>
-                  {["first", "second", "third", "four"].includes(
-                    event.number
-                  )
-                    ? event.number === "first"
-                      ? "1"
-                      : event.number === "second"
-                        ? "2"
-                        : event.number === "third"
-                          ? "3"
-                          : event.number === "four"
-                            ? "4"
-                            : "invalid"
-                    : ""}
-                </td>
-                <td>
-                  <button
-                    type="button"
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDeleteEvent(event)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {Object.keys(eventsDate).length === 0 && (
-              <tr>
-                <td colSpan={4}>Nu ai programări</td>
-              </tr>
-            )}
-            </tbody>
-          </table>
+      <div className="container pt-5">
+        <div className="card shadow">
+          <div className="card-body">
+            <div className="d-flex justify-content-between">
+              <h1>Programările mele</h1>
+            </div>
+            <div className="table-responsive">
+              <table className="table mt-3">
+                <thead>
+                <tr>
+                  <th scope="col">Incepe la</th>
+                  <th scope="col">Se termină la</th>
+                  <th scope="col">Masina</th>
+                  <th scope="col">Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                {Object.values(eventsDate).map((event: any) => (
+                  <tr key={event.id}>
+                    <td>
+                      {formatDate(event.start, {
+                        day: "numeric",
+                        month: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: false,
+                      })}
+                    </td>
+                    <td>
+                      {formatDate(event.end, {
+                        day: "numeric",
+                        month: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: false,
+                      })}
+                    </td>
+                    <td>
+                      {["first", "second", "third", "four"].includes(event.number)
+                        ? event.number === "first"
+                          ? "1"
+                          : event.number === "second"
+                            ? "2"
+                            : event.number === "third"
+                              ? "3"
+                              : event.number === "four"
+                                ? "4"
+                                : "invalid"
+                        : ""}
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDeleteEvent(event)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {Object.keys(eventsDate).length === 0 && (
+                  <tr>
+                    <td colSpan={4}>Nu ai programări</td>
+                  </tr>
+                )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>

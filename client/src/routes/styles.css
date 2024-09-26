@@ -7,3 +7,20 @@
 button {
     cursor: pointer;
 }
+
+.navbar-toggler-icon{
+    filter: invert(1);
+}
+
+.navbar-toggler:hover{
+    background: #fff3d1 !important;
+}
+
+.navbar-toggler{
+    border: 1px solid black !important;
+}
+
+.user-event {
+    background-color: #fff3d1 !important;
+    border-color: #fff3d1 !important;
+}

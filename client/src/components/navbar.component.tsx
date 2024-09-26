@@ -1,41 +1,112 @@
+import { useEffect, useState } from "react";
 import { AuthService } from "@genezio/auth";
+import LogoWhite from "../assets/Logo fata.svg";
 
 export const NavbarComponent = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const [navbarHeight, setNavbarHeight] = useState(0);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      setScrolled(offset > 5);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const navbar = document.querySelector(".navbar");
+    if (navbar) {
+      setNavbarHeight(navbar.clientHeight);
+    }
+  }, []);
+
+  const handleToggle = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
   return (
-    <nav className="navbar navbar-dark bg-primary">
-      <div className="container">
-        <a className="navbar-brand" href="/">
-          <h3>Acasă</h3>
-        </a>
-
-
-        <div className="d-flex align-items-center">
-          <a className="btn btn-outline-light me-2" href="/account">
-            Cont
+    <>
+      <nav
+        className={`navbar navbar-dark navbar-expand-lg fixed-top shadow-sm ${scrolled ? "scrolled" : ""}`}
+        style={{
+          backgroundColor: "#FFAE1F",
+          transition: "all 0.5s ease-in-out",
+          borderBottomLeftRadius: scrolled ? "3rem" : "0",
+          borderBottomRightRadius: scrolled ? "3rem" : "0",
+        }}
+      >
+        <div className="container">
+          <a className="navbar-brand" href="/">
+            <img
+              src={LogoWhite}
+              alt="Logo"
+              className="rounded-circle"
+              style={{
+                width: "4rem",
+                height: "4rem",
+                border: "1px solid #fff",
+                transition: "transform 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                const img = e.target as HTMLImageElement;
+                img.style.transform = "scale(1.1)";
+              }}
+              onMouseLeave={(e) => {
+                const img = e.target as HTMLImageElement;
+                img.style.transform = "scale(1)";
+              }}
+            />
           </a>
-          <a className="btn btn-outline-light me-2" href="/myappointments">
-            Programări
-        </a>
+
           <a
-            className="btn btn-outline-light"
-            style={{marginRight: "0.5rem"}}
-            href="mailto:rezervaricaminleu@gmail.com"
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded={!isCollapsed}
+            aria-label="Toggle navigation"
+            style={{ background: "white" }}
+            onClick={handleToggle}
           >
-            Contact
+            <span className="navbar-toggler-icon"></span>
           </a>
-          <button
-            className="btn btn-outline-light"
-            style={{marginRight: "1rem"}}
-            onClick={async () => {
-              await AuthService.getInstance().logout();
-              window.location.reload();
-            }}
-          >
-            Logout
-          </button>
+
+          <div className={`collapse navbar-collapse ${isCollapsed ? "" : "show"}`} id="navbarNav">
+            <div className="d-flex justify-content-end" style={{ flexDirection: "row", width: "100%" }}>
+              <a className="btn btn-light me-2" href="/account" style={{ border: "1px solid black" }}>
+                Cont
+              </a>
+              <a className="btn btn-light me-2" href="/myappointments" style={{ border: "1px solid black" }}>
+                Programări
+              </a>
+              <a className="btn btn-light me-2" href="mailto:rezervaricaminleu@gmail.com" style={{ border: "1px solid black" }}>
+                Contact
+              </a>
+              <a
+                className="btn btn-light"
+                onClick={async () => {
+                  await AuthService.getInstance().logout();
+                  window.location.reload();
+                }}
+                style={{ border: "1px solid black" }}
+              >
+                Logout
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      <div style={{ height: navbarHeight }}></div>
+    </>
   );
 };
+
 export default NavbarComponent;

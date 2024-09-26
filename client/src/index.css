@@ -11,11 +11,77 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #FFAE1F;
   text-decoration: inherit;
 }
-a:hover {
-  color: #535bf2;
+
+a.btn.btn-outline-light{
+  font-size: larger;
+  font-weight: 500;
+}
+
+
+a.fc-col-header-cell-cushion{
+  color: black;
+}
+
+a.fc-col-header-cell-cushion:hover {
+  color: black;
+  
+}
+
+.fc-scrollgrid-sync-inner{
+ background-color: #ffffff;
+}
+
+.fc-v-event .fc-event-main{
+  color:black !important;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#projects-tabs-tab-first.nav-link{
+  color: #000000;
+  font-weight: 500;
+}
+
+#projects-tabs-tab-first.nav-link.active{
+  background-color: #fff3d1;
+  color: #ffffff;
+}
+#projects-tabs-tab-second.nav-link {
+  color: #000000;
+  font-weight: 500;
+}
+
+#projects-tabs-tab-second.nav-link.active {
+  background-color: #fff3d1;
+  color: #ffffff;
+}
+#projects-tabs-tab-third.nav-link {
+  color: #000000;
+  font-weight: 500;
+}
+
+#projects-tabs-tab-third.nav-link.active {
+  background-color: #fff3d1;
+  color: #ffffff;
+}
+
+#projects-tabs-tab-four.nav-link {
+  color: #000000;
+  font-weight: 500;
+}
+
+#projects-tabs-tab-four.nav-link.active {
+  background-color: #fff3d1;
+  color: #ffffff;
+}
+
+.fc-timegrid{
+  border-radius: 10px !important;
 }
 
 body {
@@ -24,11 +90,29 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #fff3d1 !important;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+div.fc-event-time {
+  background-color: #fff3d1;
+  color:black;
+  border-radius: 2px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+a.fc-event{
+  border-color: #000 !important;
+  color: #000000 !important;
+  background-color: #fff;
 }
 
 button {
@@ -38,31 +122,112 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #FFAE1F !important;
+  color: black !important;
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: #FFAE1F;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+::-webkit-scrollbar {
+  display: none;
+}
+
+.btn-secondary:hover{
+    background-color: #fff3d1 !important;
+    color: #000 !important;
+}
+
+.btn-secondary{
+    color: #212529 !important;
+}
+
+.btn-light:hover{
+  background: #fff3d1 !important;
+}
+
+button{
+  background: #ffffff !important;
+  color:#000 !important;
+}
+
+.fc-today-button{
+  background: #ffffff !important;
+}
+
+.fc-today-button:hover{
+  background: #fff3d1 !important;
+}
+
+.fc-button{
+  background: #ffffff !important;
+}
+
+.fc-button:hover{
+  background: #fff3d1 !important;
+}
+
+.bg-hover-primary:hover{
+  background: #fff3d1 !important;
+}
+
+.fc-toolbar-title{
+  font-size: 1.5rem !important;
+}
+
+
+@media (max-width: 768px) {
+  .fc-toolbar-title {
+    font-size: 0.9rem !important;
   }
 }
 
-::-webkit-scrollbar {
-  display: none;
+.custom-toast {
+  animation: fadeIn 0.5s, fadeOut 0.5s 4.5s;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20%);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-brand img {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    font-size: 0.875rem;
+  }
 }

@@ -26,8 +26,8 @@ const Mentenanta: React.FC = () => {
     if (isMaintenance && timeLeft > 0) {
       const countdown = setInterval(() => {
         setTimeLeft(prevTime => {
-          const newTime = prevTime - 1000; // Scade 1 secundă
-          return newTime > 0 ? newTime : 0; // Asigură-te că nu devine negativ
+          const newTime = prevTime - 1000; 
+          return newTime > 0 ? newTime : 0;
         });
       }, 1000);
 

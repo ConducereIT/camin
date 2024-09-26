@@ -12,7 +12,6 @@ const Mentenanta: React.FC = () => {
       if (maintenance.status) {
         setIsMaintenance(true);
         const targetDate = new Date(maintenance.date);
-        console.log(targetDate);
         setTimeLeft(targetDate.getTime() - new Date().getTime());
       } else {
         setIsMaintenance(false);
@@ -25,13 +24,24 @@ const Mentenanta: React.FC = () => {
   useEffect(() => {
     if (isMaintenance && timeLeft > 0) {
       const countdown = setInterval(() => {
-        setTimeLeft(prevTime => {
-          const newTime = prevTime - 1000; 
+        setTimeLeft((prevTime) => {
+          const newTime = prevTime - 1000;
           return newTime > 0 ? newTime : 0;
         });
       }, 1000);
 
       return () => clearInterval(countdown);
+    } else if (isMaintenance && (timeLeft <= 0)) {
+      const disableMaintenance = async () => {
+        await BackendService.disableMaintenance();
+        setIsMaintenance(false);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      };
+
+      disableMaintenance();
     }
   }, [isMaintenance, timeLeft]);
 
